@@ -58,12 +58,6 @@ bool validateData(int i, const vector<string> & v, T & first, Args & ... args) {
   return validateData(i+1, v, args...);
 }
 
-// template <class T, class ... Args>
-// void VD(T first, Args ... args) {
-//   cout << first << endl;
-//   VD(args...);
-// }
-
 int main ()
 {
   string s;
@@ -71,16 +65,16 @@ int main ()
   getline(cin,s);
   while (s!="quit") {
     parse(s,v);
-    string title;
+    string albumTitle;
+    string artist;
+    int numberOfTracks;
     int year;
-    string boop;
-    int snoop;
-    if (validateData(0, v, title, year, boop, snoop)) {
+    if (validateData(0, v, albumTitle, artist, numberOfTracks, year)) {
       cout << "it worked!!" << endl;
-      cout << title << endl;
+      cout << albumTitle << endl;
+      cout << artist << endl;
+      cout << numberOfTracks << endl;
       cout << year << endl;
-      cout << boop << endl;
-      cout << snoop << endl;
     }
     else {
       cout << "bad input" << endl;
