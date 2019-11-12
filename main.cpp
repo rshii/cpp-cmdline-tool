@@ -28,33 +28,28 @@ void parse(string s, vector<string> & v) {
 }
 
 template <typename T>
-bool validateData(string x, T & first) {
-  stringstream ss (x);
-  if (is_same<T, int>::value) {
-    if (!(ss >> first)) return false;
+bool validateData(const string s, T & x) {
+  stringstream ss (s);
+  if (is_same<T, bool>::value) {
+    if (!(ss >> boolalpha >> x)) return false;
   }
-  if (is_same<T, string>::value) {
-    if (!(ss >> first)) return false;
-  }
+  else if (!(ss >> x)) return false;
   return true;
 }
 
 template <typename T>
-bool validateData(int i, const vector<string> & v, T & first) {
+bool validateData(int i, const vector<string> & v, T & x) {
   if (v.size()==0) return false;
-  return validateData(v[i], first);
+  return validateData(v[i], x);
 }
 
 template <typename T, typename ... Args>
-bool validateData(int i, const vector<string> & v, T & first, Args & ... args) {
-  // something of interest: v.size() is unsigned
-  // if v is empty, then v.size() - 1 would overflow
-  // can be the culprit of terrible bugs
+bool validateData(int i, const vector<string> & v, T & x, Args & ... args) {
   if (v.size() == 0 || i > v.size() - 1) {
     cout << "not enough parsed strings to match ... args " << endl;
     return false;
   }
-  if (!validateData(v[i], first)) return false;
+  if (!validateData(v[i], x)) return false;
   return validateData(i+1, v, args...);
 }
 
@@ -62,24 +57,38 @@ int main ()
 {
   string s;
   vector<string> v;
-  getline(cin,s);
   while (s!="quit") {
+    cout << "INPUT albumTitle(string) artist(string) numberOfTracks(int) year(int) price(float) stock available(bool):" << endl;
+    cout << endl;
+    getline(cin,s);
     parse(s,v);
+
     string albumTitle;
     string artist;
     int numberOfTracks;
     int year;
-    if (validateData(0, v, albumTitle, artist, numberOfTracks, year)) {
-      cout << "it worked!!" << endl;
+    double price;
+    bool stockAvailable;
+
+    if (validateData(
+      0, v, albumTitle, artist, numberOfTracks, year, price, stockAvailable
+      )) {
+      cout << "It worked!! Data is clean!" << endl;
       cout << albumTitle << endl;
       cout << artist << endl;
       cout << numberOfTracks << endl;
       cout << year << endl;
+      cout << price << endl;
+      cout << stockAvailable << endl;
     }
+ 
     else {
-      cout << "bad input" << endl;
+      cout << "Invalid input" << endl << endl;
     }
-    getline(cin,s);
   }
   return 0;
 }
+
+// something of interest: vector<T>.size() is unsigned
+// if v is empty, then v.size() - 1 would overflow
+// can be the culprit of terrible bugs
